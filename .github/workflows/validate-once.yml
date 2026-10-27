@@ -1,0 +1,55 @@
+name: Validate Quick Community source (one-off)
+
+on:
+  push:
+    branches:
+      - release-validation-2026-10-27
+    paths:
+      - .github/workflows/validate-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out public source
+        uses: actions/checkout@v4
+
+      - name: Prepare launcher artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app/src/main/res/drawable-nodpi
+          cat notes/icon_parts/part*.b64 | tr -d '\r\n' | base64 -d > app/src/main/res/drawable-nodpi/ic_quick_launcher_final.png
+          echo "472b0cf79f85cf6e473fe8414bcc93e1da328c528eda31a49c2cb867ddddb2aa  app/src/main/res/drawable-nodpi/ic_quick_launcher_final.png" | sha256sum -c -
+          rm -f app/src/main/res/drawable/ic_quick_launcher_final.xml
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Gradle 9.6
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Unit tests and Community compilation
+        run: gradle :app:testDebugUnitTest :app:assembleCommunity --stacktrace
+
+      - name: Check unsigned community output exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s app/build/outputs/apk/community/app-community-unsigned.apk
+          echo "Community source compiles and an unsigned APK was produced; NOT approved for distribution"
