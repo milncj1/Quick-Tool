@@ -1,0 +1,23 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+app/build/
+
+# Never commit release-signing material, downloaded development keys or local credentials.
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pk8
+*.pem
+*.key
+.env
+.env.*
+*.apk
+*.aab

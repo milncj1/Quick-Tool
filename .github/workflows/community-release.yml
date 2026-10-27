@@ -1,0 +1,93 @@
+name: Build Quick Community release candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  community:
+    # An owner-initiated candidate only: no push/PR builds, no automatic publish.
+    if: github.repository_owner == 'milncj1' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out accepted source
+        uses: actions/checkout@v4
+
+      - name: Prepare original Quick launcher artwork
+        run: |
+          set -euo pipefail
+          mkdir -p app/src/main/res/drawable-nodpi
+          cat notes/icon_parts/part*.b64 | tr -d '\r\n' | base64 -d > app/src/main/res/drawable-nodpi/ic_quick_launcher_final.png
+          echo "472b0cf79f85cf6e473fe8414bcc93e1da328c528eda31a49c2cb867ddddb2aa  app/src/main/res/drawable-nodpi/ic_quick_launcher_final.png" | sha256sum -c -
+          rm -f app/src/main/res/drawable/ic_quick_launcher_final.xml
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Install required Android platform/build tools
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Test and assemble isolated community build
+        run: gradle :app:testDebugUnitTest :app:assembleCommunity --stacktrace
+
+      - name: Verify all private signing inputs are configured
+        env:
+          KEYSTORE_B64: ${{ secrets.QUICK_COMMUNITY_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.QUICK_COMMUNITY_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.QUICK_COMMUNITY_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.QUICK_COMMUNITY_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$KEYSTORE_B64" || -z "$STORE_PASSWORD" || -z "$KEY_ALIAS" || -z "$KEY_PASSWORD" ]]; then
+            echo "::error::Owner-only Quick Community signing secrets have not been configured."
+            exit 1
+          fi
+
+      - name: Sign and verify private-key release candidate
+        env:
+          QUICK_COMMUNITY_KEYSTORE_BASE64: ${{ secrets.QUICK_COMMUNITY_KEYSTORE_BASE64 }}
+          QUICK_COMMUNITY_STORE_PASSWORD: ${{ secrets.QUICK_COMMUNITY_STORE_PASSWORD }}
+          QUICK_COMMUNITY_KEY_ALIAS: ${{ secrets.QUICK_COMMUNITY_KEY_ALIAS }}
+          QUICK_COMMUNITY_KEY_PASSWORD: ${{ secrets.QUICK_COMMUNITY_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$QUICK_COMMUNITY_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/quick-community.p12"
+          mkdir -p dist
+          test -f app/build/outputs/apk/community/app-community-unsigned.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign \
+            --ks "$RUNNER_TEMP/quick-community.p12" \
+            --ks-key-alias "$QUICK_COMMUNITY_KEY_ALIAS" \
+            --ks-pass env:QUICK_COMMUNITY_STORE_PASSWORD \
+            --key-pass env:QUICK_COMMUNITY_KEY_PASSWORD \
+            --out "dist/quick-community-1.0.0.apk" \
+            app/build/outputs/apk/community/app-community-unsigned.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs dist/quick-community-1.0.0.apk
+          (cd dist && sha256sum quick-community-1.0.0.apk > quick-community-1.0.0.sha256)
+          rm -f "$RUNNER_TEMP/quick-community.p12"
+
+      - name: Upload review-only candidate (not a GitHub Release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: quick-community-1.0.0-candidate
+          path: |
+            dist/quick-community-1.0.0.apk
+            dist/quick-community-1.0.0.sha256
+          if-no-files-found: error
+          retention-days: 7
