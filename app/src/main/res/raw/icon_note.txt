@@ -1,0 +1,1 @@
+The selected Quick icon artwork is stored as the launcher PNG resource.

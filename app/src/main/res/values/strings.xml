@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Quick</string>
+    <string name="shortcut_capture_short">Capture</string>
+    <string name="shortcut_capture_long">Capture something in Quick</string>
+    <string name="shortcut_voice_short">Voice</string>
+    <string name="shortcut_voice_long">Speak into Quick</string>
+    <string name="shortcut_photo_short">Photo</string>
+    <string name="shortcut_photo_long">Take a photo into Quick</string>
+    <string name="shortcut_waiting_short">Waiting</string>
+    <string name="shortcut_waiting_long">Open waiting items</string>
+    <string name="widget_description">Fast access to text, voice, photo and waiting items</string>
+</resources>
