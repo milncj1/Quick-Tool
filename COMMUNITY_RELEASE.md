@@ -55,7 +55,7 @@ In GitHub, open this repository's **Settings → Secrets and variables → Actio
 - `QUICK_COMMUNITY_KEY_ALIAS`: `quick-community`.
 - `QUICK_COMMUNITY_KEY_PASSWORD`: the key password (normally the same as the keystore password for a PKCS12 keystore).
 
-Only when the source is accepted and secrets have been set, use **Actions → Build Quick Community release candidate → Run workflow** on `main`. The workflow runs tests, builds, privately signs, verifies and uploads a versioned APK plus checksum as a short-retention **private candidate artifact**. It deliberately does not automatically publish a GitHub Release.
+Only when the source is accepted and secrets have been set, use **Actions → Build Quick Community release candidate → Run workflow** on `main`. The workflow runs tests, builds, privately signs, verifies and uploads a versioned APK plus checksum as a short-retention **review candidate artifact**. Because this is a public repository, **do not assume Actions artifacts are confidential or inaccessible to visitors**. It deliberately does not automatically publish a GitHub Release.
 
 ## Public-release acceptance
 
