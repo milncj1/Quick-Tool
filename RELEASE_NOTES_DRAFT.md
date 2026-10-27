@@ -36,7 +36,7 @@ Do not offer test-key or unsigned APKs as public releases.
 
 ## Final release approval
 
-- [ ] Source build and unit test green
+- [x] Source build and available unit tests green ([GitHub run](https://github.com/milncj1/Quick-Tool/actions/runs/40570908546))
 - [ ] Signed APK certificate reviewed
 - [ ] Owner installed alongside original Quick without losing data
 - [ ] Capture / voice / photo / share / widget / notifications / backup tested on real phone
