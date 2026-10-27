@@ -38,6 +38,12 @@ The optional PNG preparation removes the XML fallback so Android's resource reso
 
 ## Signing — owner-only, once
 
+**The simplest option is [the Windows signing setup script](tools/setup-community-signing.ps1).** Download that file from GitHub, save it on your own computer and run it in Windows PowerShell with JDK 17 installed. It generates the private key on **your** computer, refuses to overwrite an existing key and walks you through the four GitHub secrets. It never uploads the key automatically. Back up the resulting key and remember its password.
+
+The full manual method is also available below.
+
+
+
 **Never upload the release keystore to GitHub source files, attach it to an issue, or paste it into an AI chat.**
 
 On your own Windows computer, use JDK 17's `keytool` from PowerShell to create a private signing keystore:
