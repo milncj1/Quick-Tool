@@ -1,17 +1,17 @@
 # Quick Tool — public release checklist
 
-The source code is publicly available under MIT. **There is no endorsed installable APK yet.**
+The source code is publicly available under MIT. **There is no endorsed installable APK yet.** The isolated Community build and existing unit tests passed in GitHub Actions on 27 October 2026.
 
 ## Public source
 - [x] A clean source snapshot is published separately from the original private repository's development history.
 - [x] Original personal-test-key workflow and internal acceptance documents are excluded.
 - [x] Privacy, security, contributing and MIT licence documentation are included.
-- [ ] Independently verify ownership and redistribution rights for the launcher image and all bundled artwork.
+- [ ] Confirm owner approval to redistribute the custom blue-gradient white-Q launcher artwork. Repository assets contain primarily Android vector/XML drawings and icon PNG chunks; no provenance record or third-party rights sign-off was established.
 - [ ] Add real-device screenshots featuring **fictional** captures.
 - [ ] Verify the public documentation and issue templates while signed out.
 
 ## Community APK (not yet released)
-- [ ] Independently compile and test the Community build in GitHub Actions.
+- [x] Compile and run available unit tests for Community source in GitHub Actions; [successful verification run](https://github.com/milncj1/Quick-Tool/actions/runs/40570908546). This produces an **unsigned**, non-distributable APK.
 - [ ] Generate and back up a private signing key **outside the repository**.
 - [ ] Configure the owner-only GitHub Actions secrets as documented in [COMMUNITY_RELEASE.md](COMMUNITY_RELEASE.md).
 - [ ] Run the manual release-candidate workflow and verify signed output and SHA-256.
