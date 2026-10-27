@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="capture"
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_launcher_final"
+        android:shortcutShortLabel="@string/shortcut_capture_short"
+        android:shortcutLongLabel="@string/shortcut_capture_long">
+        <intent
+            android:action="uk.co.milncj.quick.OPEN_CAPTURE"
+            android:targetPackage="uk.co.milncj.quick"
+            android:targetClass="uk.co.milncj.quick.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="voice"
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_launcher_final"
+        android:shortcutShortLabel="@string/shortcut_voice_short"
+        android:shortcutLongLabel="@string/shortcut_voice_long">
+        <intent
+            android:action="uk.co.milncj.quick.OPEN_VOICE"
+            android:targetPackage="uk.co.milncj.quick"
+            android:targetClass="uk.co.milncj.quick.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="photo"
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_launcher_final"
+        android:shortcutShortLabel="@string/shortcut_photo_short"
+        android:shortcutLongLabel="@string/shortcut_photo_long">
+        <intent
+            android:action="uk.co.milncj.quick.OPEN_PHOTO"
+            android:targetPackage="uk.co.milncj.quick"
+            android:targetClass="uk.co.milncj.quick.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="waiting"
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_launcher_final"
+        android:shortcutShortLabel="@string/shortcut_waiting_short"
+        android:shortcutLongLabel="@string/shortcut_waiting_long">
+        <intent
+            android:action="uk.co.milncj.quick.OPEN_WAITING"
+            android:targetPackage="uk.co.milncj.quick"
+            android:targetClass="uk.co.milncj.quick.MainActivity" />
+    </shortcut>
+</shortcuts>
